@@ -40,6 +40,8 @@ let persons = [
   },
 ];
 
+app.use(express.static("dist"));
+
 app.use(cors(allowedOrigins));
 
 app.use((req, res, next) => {

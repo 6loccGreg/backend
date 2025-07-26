@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const app = express();
+const path = require("path");
 const PORT = 3001;
 
 const allowedOrigins = ["http://localhost:5173"];
@@ -40,7 +41,7 @@ let persons = [
   },
 ];
 
-app.use(express.static("dist"));
+app.use(express.static(path.join(__dirname, "dist"));
 
 app.use(cors(allowedOrigins));
 

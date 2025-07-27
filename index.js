@@ -83,7 +83,7 @@ app.get("/api/persons", (request, response) => {
 app.get("/info", (request, response) => {
   Person.countDocuments({}).then((count) => {
     response.send(
-      `<p><strong>Phonebook has info for ${persons.length} people </strong></p> <p><strong>${new Date().toString()}</strong></p>`,
+      `<p><strong>Phonebook has info for ${count} people </strong></p> <p><strong>${new Date().toString()}</strong></p>`,
     );
   });
 });

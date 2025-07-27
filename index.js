@@ -81,9 +81,11 @@ app.get("/api/persons", (request, response) => {
   });
 });
 app.get("/info", (request, response) => {
-  response.send(
-    `<p><strong>Phonebook has info for ${persons.length} people </strong></p> <p><strong>${new Date().toString()}</strong></p>`,
-  );
+  Person.countDocuments({}).then((count) => {
+    response.send(
+      `<p><strong>Phonebook has info for ${persons.length} people </strong></p> <p><strong>${new Date().toString()}</strong></p>`,
+    );
+  });
 });
 app.get("/api/persons/:id", (request, response) => {
   Person.findById(request.params.id)

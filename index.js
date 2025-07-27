@@ -3,7 +3,9 @@ const morgan = require("morgan");
 const cors = require("cors");
 const app = express();
 const path = require("path");
-const PORT = 3001;
+const Person = require("./models/person");
+require("dotenv").config();
+const PORT = process.env.PORT;
 
 const allowedOrigins = ["http://localhost:5173"];
 
@@ -75,7 +77,9 @@ app.use(
 );
 
 app.get("/api/persons", (request, response) => {
-  response.send(persons);
+  Perosn.find({}).then((person) => {
+    response.json(person);
+  });
 });
 app.get("/info", (request, response) => {
   response.send(
@@ -83,13 +87,9 @@ app.get("/info", (request, response) => {
   );
 });
 app.get("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  if (persons[id]) {
-    const person = persons.find((person) => person.id === id);
+  Person.findById(request.params.id).then((person) => {
     response.json(person);
-  } else {
-    response.status(404).end();
-  }
+  });
 });
 
 app.delete("/api/persons/:id", (request, response) => {
@@ -101,25 +101,18 @@ app.delete("/api/persons/:id", (request, response) => {
 app.post("/api/persons", (request, response) => {
   const body = request.body;
 
-  if (!body?.name) {
-    return response.status(400).json({ error: "name is required" });
-  }
-  if (!body?.number) {
-    return response.status(400).json({ error: "number is required" });
+  if (!body.content || !body.number) {
+    return response.status(400).json({ error: "content missing" });
   }
 
-  if (persons.find((person) => person.name === body.name)) {
-    return response.status(409).json({ error: "name must be unique" });
-  }
-
-  const person = {
-    id: `${Math.floor(Math.random() * 1000)}`,
+  const person = new Person({
     name: body.name,
     number: body.number,
-  };
+  });
 
-  persons = [...persons, person];
-  response.json(person);
+  person.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
 });
 
 app.listen(PORT, () => {

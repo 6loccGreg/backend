@@ -4,7 +4,6 @@ const cors = require("cors");
 const app = express();
 const path = require("path");
 const Person = require("./models/person");
-require("dotenv").config();
 const PORT = process.env.PORT;
 
 const allowedOrigins = ["http://localhost:5173"];
@@ -88,14 +87,18 @@ app.get("/info", (request, response) => {
 });
 app.get("/api/persons/:id", (request, response) => {
   Person.findById(request.params.id).then((person) => {
-    response.json(person);
+    if (person) {
+      response.json(person);
+    } else {
+    }
   });
 });
 
 app.delete("/api/persons/:id", (request, response) => {
-  const id = request.params.id;
-  persons = persons.filter((person) => person.id !== id);
-  response.status(204).end();
+  Person.deleteOne({ _id: request.params.id }).then((result) => {
+    console.log(`deleted id: ${request.params.id}`);
+    response.status(204).end();
+  });
 });
 
 app.post("/api/persons", (request, response) => {

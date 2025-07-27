@@ -77,7 +77,7 @@ app.use(
 );
 
 app.get("/api/persons", (request, response) => {
-  Perosn.find({}).then((person) => {
+  Person.find({}).then((person) => {
     response.json(person);
   });
 });
